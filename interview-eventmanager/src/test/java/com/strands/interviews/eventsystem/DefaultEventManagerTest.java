@@ -117,35 +117,18 @@ public class DefaultEventManagerTest
     public void testPublishEvent() 
     {
     	DefaultEventManager dem = (DefaultEventManager)eventManager;
-   	 	EventListenerMock eventListenerMock1 = new EventListenerMock(new Class[]{SimpleEvent.class});
-   	 	EventListenerMock eventListenerMock2 = new EventListenerMock(new Class[]{SubEvent.class});
-   	 	
-   	 	dem.registerListener("listener1.key", eventListenerMock1);
-   	 	dem.registerListener("listener2.key", eventListenerMock2);
-   	 	dem.publishEvent(new SimpleEvent(this));
-     
-		assertTrue(eventListenerMock1.isCalled());
-	}
-    
-    @Test 
-    public void testListenAllEvents()
-    {
-    	DefaultEventManager dem = (DefaultEventManager)eventManager;
-    	 EventListenerMock eventListenerMock1 = new EventListenerMock(new Class[]{SimpleEvent.class});
-         EventListenerMock eventListenerMock2 = new EventListenerMock(new Class[]{SimpleEvent.class});
-         EventListenerMock eventListenerMock3 = new EventListenerMock(new Class[]{SubEvent.class});
-         EventListenerMock eventListenerMock4 = new EventListenerMock(new Class[]{SubEvent.class});
-         EventListenerMock eventListenerMockEmpty = new EventListenerMock(null);
-    	
-     	dem.registerListener("listener1.key", eventListenerMock1);
-    	dem.registerListener("listener2.keyy", eventListenerMock2);
-    	dem.registerListener("listener3.key", eventListenerMock3);
-    	dem.registerListener("listener4.key", eventListenerMock4);
-    	dem.registerListener("listenerEmpty.key", eventListenerMockEmpty);
-    	
+		EventListenerMock eventListenerMock = new EventListenerMock(new Class[]{SubEvent.class});
+        
+		dem.registerListener("firstEventKey", eventListenerMock);
+		dem.publishEvent(new SubEvent(this));
+		Class[] events = eventListenerMock.getHandledEventClasses();
+		
 		//It is verified that the event has been added correctly.
-    	dem.publishEvent(new SimpleEvent(this));
-    	dem.publishEvent(new SubEvent(this));
-		assertTrue(eventListenerMockEmpty.isCalled());
-    }
+		assertTrue(eventListenerMock.isCalled());
+		
+		//The classes of recorded events are compared
+		for (int i = 0; i < events.length; i++) {
+			assertEquals(events[i].getClass(), (SubEvent.class).getClass());
+		}
+	}
 }

@@ -20,7 +20,6 @@ public class DefaultEventManagerTest
     }
 
     @Test
-    @Ignore
     public void testRegisterListenerAndPublishEvent()
     {
         EventListenerMock eventListenerMock = new EventListenerMock(new Class[]{SimpleEvent.class});
@@ -116,15 +115,20 @@ public class DefaultEventManagerTest
     @Test
     public void testPublishEvent() 
     {
+    	
     	DefaultEventManager dem = (DefaultEventManager)eventManager;
-		EventListenerMock eventListenerMock = new EventListenerMock(new Class[]{SubEvent.class});
-        
-		dem.registerListener("firstEventKey", eventListenerMock);
-		dem.publishEvent(new SubEvent(this));
-		Class[] events = eventListenerMock.getHandledEventClasses();
+   	 	EventListenerMock eventListenerMock1 = new EventListenerMock(new Class[]{SimpleEvent.class});
+   	 	EventListenerMock eventListenerMock2 = new EventListenerMock(new Class[]{SubEvent.class});
+   	 	
+   	 	dem.registerListener("listener1.key", eventListenerMock1);
+   	 	dem.registerListener("listener2.key", eventListenerMock2);
+   	 	
+   	 	dem.publishEvent(new SimpleEvent(this));
+
+		Class[] events = eventListenerMock1.getHandledEventClasses();
 		
 		//It is verified that the event has been added correctly.
-		assertTrue(eventListenerMock.isCalled());
+		assertTrue(eventListenerMock2.isCalled());
 		//The classes of recorded events are compared
 		for (int i = 0; i < events.length; i++) {
 			assertEquals(events[i].getClass(), (SubEvent.class).getClass());
@@ -152,4 +156,19 @@ public class DefaultEventManagerTest
     	dem.publishEvent(new SubEvent(this));
 		assertTrue(eventListenerMockEmpty.isCalled());
     }
+    
+    @Test
+    public void testAggregationListeners() 
+    {
+    	DefaultEventManager dem = (DefaultEventManager)eventManager;
+   	 	EventListenerMock eventListenerMock1 = new EventListenerMock(new Class[]{SimpleEvent.class});
+   	 	EventListenerMock eventListenerMock2 = new EventListenerMock(new Class[]{SubEvent.class});
+   	 	dem.registerListener("listener1.key", eventListenerMock1);
+   	 	dem.registerListener("listener2.key", eventListenerMock2);
+   	 	dem.publishEvent(new SimpleEvent(this));
+     
+		assertTrue(eventListenerMock1.isCalled());
+    }
+
+
 }

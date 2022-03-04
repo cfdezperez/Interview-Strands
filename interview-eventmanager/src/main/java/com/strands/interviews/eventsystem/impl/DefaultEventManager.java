@@ -3,6 +3,8 @@ package com.strands.interviews.eventsystem.impl;
 import com.strands.interviews.eventsystem.EventManager;
 import com.strands.interviews.eventsystem.InterviewEvent;
 import com.strands.interviews.eventsystem.InterviewEventListener;
+import com.strands.interviews.eventsystem.events.SimpleEvent;
+import com.strands.interviews.eventsystem.events.SubEvent;
 
 import java.util.*;
 
@@ -28,6 +30,11 @@ public class DefaultEventManager implements EventManager
         }
 
         sendEventTo(event, calculateListeners(event.getClass()));
+        //If it is a super event checks if it can send it to other subEvents
+        if(event.getClass() ==  SimpleEvent.class) {
+        	InterviewEvent newEvent = new SubEvent(event.getSource());
+        	sendEventTo(newEvent,calculateListeners(newEvent.getClass()));
+        }
     }
 
     private Collection calculateListeners(Class eventClass)

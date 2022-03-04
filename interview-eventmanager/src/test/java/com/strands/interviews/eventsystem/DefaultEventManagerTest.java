@@ -125,7 +125,6 @@ public class DefaultEventManagerTest
 		
 		//It is verified that the event has been added correctly.
 		assertTrue(eventListenerMock.isCalled());
-		
 		//The classes of recorded events are compared
 		for (int i = 0; i < events.length; i++) {
 			assertEquals(events[i].getClass(), (SubEvent.class).getClass());

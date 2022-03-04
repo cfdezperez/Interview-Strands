@@ -112,4 +112,22 @@ public class DefaultEventManagerTest
         {
         }
     }
+    
+    @Test
+    public void testPublishEvent() 
+    {
+    	DefaultEventManager dem = (DefaultEventManager)eventManager;
+		EventListenerMock eventListenerMock = new EventListenerMock(new Class[]{SubEvent.class});
+        
+		dem.registerListener("firstEventKey", eventListenerMock);
+		dem.publishEvent(new SubEvent(this));
+		Class[] events = eventListenerMock.getHandledEventClasses();
+		
+		//It is verified that the event has been added correctly.
+		assertTrue(eventListenerMock.isCalled());
+		//The classes of recorded events are compared
+		for (int i = 0; i < events.length; i++) {
+			assertEquals(events[i].getClass(), (SubEvent.class).getClass());
+		}
+	}
 }

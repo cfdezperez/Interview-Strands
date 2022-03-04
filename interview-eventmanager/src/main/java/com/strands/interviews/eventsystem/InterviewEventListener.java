@@ -29,4 +29,6 @@ public interface InterviewEventListener
      *         return null.
      */
     Class[] getHandledEventClasses();
+    
+    public void setClasses(Class[] classes);
 }

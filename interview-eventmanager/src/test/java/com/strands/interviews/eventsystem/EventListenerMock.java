@@ -31,4 +31,8 @@ class EventListenerMock implements InterviewEventListener
     {
         return classes;
     }
+    
+    public void setClasses(Class[] classes) {
+    	this.classes = classes;
+    }
 }

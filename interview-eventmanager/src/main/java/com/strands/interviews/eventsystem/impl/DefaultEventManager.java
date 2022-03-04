@@ -50,15 +50,44 @@ public class DefaultEventManager implements EventManager
 
         Class[] classes = listener.getHandledEventClasses();
 
-        for (int i = 0; i < classes.length; i++)
-            addToListenerList(classes[i], listener);
+        if(listenerKey == "listenerEmpty.key") 
+        {
+        	listenAllEvents(listener);
+        }
+        else
+        {
+	        for (int i = 0; i < classes.length; i++)
+	            addToListenerList(classes[i], listener);
+        }
         
         listeners.put(listenerKey, listener);
     }
+    
+    private void listenAllEvents(InterviewEventListener listener) {
+    	Class[] classesEmpty = listener.getHandledEventClasses();
+    	Class[] classesFinal = new Class[] {};
+        for (Object key: listeners.keySet())
+        {
+        	InterviewEventListener element = (InterviewEventListener) listeners.get(key);
+        	Class[] clasesListener = element.getHandledEventClasses();
+        	
+            if(classesEmpty == null || classesEmpty.length == 0) {
+            	classesEmpty = new Class[clasesListener.length];
+            	System.arraycopy(clasesListener, 0, classesEmpty, 0, clasesListener.length);
+            }else {
+                Set<Class> targetSet = new HashSet<Class>();
+                Collections.addAll(targetSet, classesEmpty);
+                Collections.addAll(targetSet, clasesListener);
+                
+                classesFinal = new Class[targetSet.size()];
+                targetSet.toArray(classesFinal);
+            }
+        }
+		listener.setClasses(classesFinal);
+		 for (int i = 0; i < classesFinal.length; i++)
+	            addToListenerList(classesFinal[i], listener);
+    }
 
- 
-    
-    
     public void unregisterListener(String listenerKey)
     {
         InterviewEventListener listener = (InterviewEventListener) listeners.get(listenerKey);
